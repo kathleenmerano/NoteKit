@@ -14,7 +14,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/home"); // go to homepage after login okokoko
+      router.push("/home"); // go to homepage after login 
     } catch (err) {
       setError(err.message);
     }

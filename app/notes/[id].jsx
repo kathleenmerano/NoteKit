@@ -5,7 +5,7 @@ import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 export default function NoteDetail() {
-  const { id } = useLocalSearchParams(); // get note ID from URL
+  const { id } = useLocalSearchParams(); // get note ID from URL okokokokokookko
   const router = useRouter();
   const [note, setNote] = useState(null);
   const [title, setTitle] = useState("");
