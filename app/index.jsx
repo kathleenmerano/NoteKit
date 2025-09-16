@@ -1,38 +1,54 @@
-import { Link } from 'expo-router'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
-const Home = () => {
+export default function Index() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        M Y  G O A L S
-      </Text>
-      <Link style={styles.link} href="/goals">
-        View Your Goals
-      </Link>
-      <Link style={styles.link} href="/goals/create">
-        Add a New Goal
-      </Link>
+      <Text style={styles.title}>Welcome to NoteKit</Text>
+      <Text style={styles.subtitle}>Your smart note-taking app</Text>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/login")}
+      >
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.outlineButton]}
+        onPress={() => router.push("/signup")}
+      >
+        <Text style={[styles.buttonText, styles.outlineText]}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 20,
   },
-  title: {
-    marginVertical: 40,
-    fontSize: 28,
+  title: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
+  subtitle: { fontSize: 16, color: "#555", marginBottom: 40 },
+  button: {
+    backgroundColor: "#7a42f4",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    width: "80%",
+    marginVertical: 10,
   },
-  link: {
-    marginVertical: 20,
-    padding: 16,
-    backgroundColor: '#21cc8d',
-    color: 'white',
-    borderRadius: 8,
+  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+  outlineButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#7a42f4",
   },
-})
-
-export default Home
+  outlineText: { color: "#7a42f4" },
+});
