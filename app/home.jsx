@@ -101,4 +101,3 @@ const styles = StyleSheet.create({
   },
   logoutText: { color: "white", fontWeight: "bold" },
 });
-//dfdf

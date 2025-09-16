@@ -78,4 +78,3 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
 });
-//fdf

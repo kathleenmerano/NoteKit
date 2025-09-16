@@ -5,5 +5,3 @@ const config = getDefaultConfig(__dirname);
 config.resolver.sourceExts.push("cjs"); // for Firebase compatibility
 
 module.exports = config;
-
-//fdfd
