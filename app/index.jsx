@@ -52,3 +52,4 @@ const styles = StyleSheet.create({
   },
   outlineText: { color: "#7a42f4" },
 });
+//fdfd
