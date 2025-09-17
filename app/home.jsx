@@ -39,7 +39,7 @@ export default function Homepage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Your Notes</Text>
+      <Text style={styles.header}>My Notes</Text>
 
       <FlatList
         data={notes}
