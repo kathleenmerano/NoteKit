@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Index() {
@@ -6,22 +6,38 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to NoteKit</Text>
-      <Text style={styles.subtitle}>Your smart note-taking app</Text>
+      {/* Illustration (replace with your own image) */}
+      <Image
+        source={require("../assets/images/note.png")} // add your image in assets folder
+        style={styles.image}
+        resizeMode="contain"
+      />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/login")}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+      {/* Headline with highlight */}
+      <Text style={styles.headline}>
+        <Text style={styles.highlight}>Your Creative </Text>
+        Notebook
+      </Text>
 
-      <TouchableOpacity
-        style={[styles.button, styles.outlineButton]}
-        onPress={() => router.push("/signup")}
-      >
-        <Text style={[styles.buttonText, styles.outlineText]}>Sign Up</Text>
-      </TouchableOpacity>
+      {/* Subtitle */}
+      <Text style={styles.subtitle}>Write freely. Think clearly.</Text>
+
+      {/* Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.outlineButton}
+          onPress={() => router.push("/login")}
+        >
+          <Text style={styles.outlineText}>Log in</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.solidButton}
+          onPress={() => router.push("/signup")}
+        >
+          <Text style={styles.solidText}>Get started</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -29,26 +45,63 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#fff",
-    padding: 20,
-  },
-  title: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
-  subtitle: { fontSize: 16, color: "#555", marginBottom: 40 },
-  button: {
-    backgroundColor: "#7a42f4",
-    padding: 15,
-    borderRadius: 10,
     alignItems: "center",
-    width: "80%",
-    marginVertical: 10,
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+  image: {
+    width: "100%",
+    height: 300,
+    marginBottom: 30,
+  },
+  headline: {
+    fontSize: 28,
+    fontWeight: "700",
+    textAlign: "center",
+    marginBottom: 10,
+    lineHeight: 34,
+  },
+  highlight: {
+    backgroundColor: "#FFD93D", // yellow highlight
+    color: "#1A1A1A",
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#444",
+    textAlign: "center",
+    marginBottom: 40,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: 12,
+  },
   outlineButton: {
-    backgroundColor: "transparent",
+    flex: 1,
     borderWidth: 1,
-    borderColor: "#7a42f4",
+    borderColor: "#000",
+    borderRadius: 20,
+    paddingVertical: 14,
+    alignItems: "center",
   },
-  outlineText: { color: "#7a42f4" },
+  outlineText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+  },
+  solidButton: {
+    flex: 1,
+    backgroundColor: "#000",
+    borderRadius: 20,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  solidText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+  },
 });

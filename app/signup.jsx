@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { Link, useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 
@@ -37,15 +41,11 @@ export default function Signup() {
 
   // Google login result
   if (response?.type === "success") {
-    // TODO: connect to Firebase with Google credential
     router.push("/home");
   }
 
   return (
     <View style={styles.container}>
-      {/* Gradient Header */}
-      <LinearGradient colors={["#d7b9ff", "#fff"]} style={styles.header} />
-
       <Text style={styles.title}>Create Account</Text>
 
       {/* Name Input */}
@@ -89,13 +89,13 @@ export default function Signup() {
         disabled={!request}
         onPress={() => promptAsync()}
       >
-        <Ionicons name="logo-google" size={20} color="red" style={{ marginRight: 10 }} />
+        <Image source={require("../assets/images/google.png")} style={styles.socialIcon} />
         <Text style={styles.socialText}>Continue With Google</Text>
       </TouchableOpacity>
 
       {/* Facebook Signup */}
       <TouchableOpacity style={styles.socialButton}>
-        <FontAwesome name="facebook" size={20} color="#1877F2" style={{ marginRight: 10 }} />
+        <Image source={require("../assets/images/facebook.png")} style={styles.socialIcon} />
         <Text style={styles.socialText}>Continue With Facebook</Text>
       </TouchableOpacity>
 
@@ -112,8 +112,7 @@ export default function Signup() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  header: { height: 100, borderBottomLeftRadius: 50, borderBottomRightRadius: 50 },
-  title: { fontSize: 24, fontWeight: "bold", marginVertical: 20 },
+  title: { fontSize: 28, fontWeight: "bold", marginTop: 50, marginBottom: 20 },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -142,6 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 15,
   },
+  socialIcon: { width: 20, height: 20, marginRight: 10 },
   socialText: { fontSize: 15, fontWeight: "500" },
   loginText: { textAlign: "center", marginTop: 20, color: "#555" },
   link: { color: "#7a42f4", fontWeight: "600" },

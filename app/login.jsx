@@ -1,10 +1,15 @@
 import { useState } from "react";
-import {View, Text, TextInput, TouchableOpacity, StyleSheet,} from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { Link, useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-import { Ionicons } from "@expo/vector-icons";
 
 // Google + Facebook Auth
 import * as Google from "expo-auth-session/providers/google";
@@ -41,8 +46,6 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={["rgba(224, 219, 230, 1)ff", "#fff"]} style={styles.header} />
-
       <Text style={styles.title}>Sign in</Text>
       <Text style={styles.subtitle}>Welcome back</Text>
 
@@ -80,20 +83,14 @@ export default function Login() {
       <Text style={styles.orText}>or</Text>
 
       {/* Google */}
-      <TouchableOpacity
-        style={styles.socialButton}
-        onPress={() => promptAsync()}
-      >
-        <Ionicons name="logo-google" size={20} color="#DB4437" />
+      <TouchableOpacity style={styles.socialButton} onPress={() => promptAsync()}>
+        <Image source={require("../assets/images/google.png")} style={styles.socialIcon} />
         <Text style={styles.socialText}>Continue with Google</Text>
       </TouchableOpacity>
 
       {/* Facebook */}
-      <TouchableOpacity
-        style={styles.socialButton}
-        onPress={() => fbPromptAsync()}
-      >
-        <Ionicons name="logo-facebook" size={20} color="#4267B2" />
+      <TouchableOpacity style={styles.socialButton} onPress={() => fbPromptAsync()}>
+        <Image source={require("../assets/images/facebook.png")} style={styles.socialIcon} />
         <Text style={styles.socialText}>Continue with Facebook</Text>
       </TouchableOpacity>
 
@@ -110,8 +107,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  header: { height: 150, borderBottomLeftRadius: 80, borderBottomRightRadius: 80 },
-  title: { fontSize: 28, fontWeight: "bold", marginTop: -80 },
+  title: { fontSize: 28, fontWeight: "bold", marginTop: 50 },
   subtitle: { fontSize: 16, color: "#555", marginBottom: 20 },
   input: {
     borderWidth: 1,
@@ -142,7 +138,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 5,
   },
-  socialText: { marginLeft: 10, fontSize: 15 },
+  socialIcon: { width: 20, height: 20, marginRight: 10 },
+  socialText: { fontSize: 15, fontWeight: "500" },
   footerText: { textAlign: "center", marginTop: 20, color: "#555" },
   link: { color: "#7a42f4", fontWeight: "600" },
 });
