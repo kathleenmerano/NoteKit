@@ -1,80 +1,89 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { collection, addDoc } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CreateNote() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [error, setError] = useState("");
 
-  const handleAddNote = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        setError("You must be logged in to create a note.");
-        return;
-      }
+  const handleSave = async () => {
+    if (!title.trim() && !content.trim()) return;
 
-      await addDoc(collection(db, "notes"), {
-        title,
-        content,
-        uid: user.uid, // 🔹 link note to user
-        createdAt: new Date(),
-      });
+    const user = auth.currentUser;
+    await addDoc(collection(db, "notes"), {
+      uid: user.uid,
+      title,
+      content,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      pinned: false,
+    });
 
-      router.push("/home"); // go back to homepage after adding
-    } catch (err) {
-      setError(err.message);
-    }
+    router.back();
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Create a Note</Text>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      {/* Header with back + save */}
+      <View style={styles.headerBar}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Note Title"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={[styles.input, { height: 120 }]}
-        placeholder="Note Content"
-        value={content}
-        onChangeText={setContent}
-        multiline
-      />
+        <Text style={styles.headerTitle}>Create Note</Text>
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TouchableOpacity onPress={handleSave}>
+          <Ionicons name="checkmark-done-outline" size={24} color="green" />
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleAddNote}>
-        <Text style={styles.buttonText}>Save Note</Text>
-      </TouchableOpacity>
-    </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter title..."
+          value={title}
+          onChangeText={setTitle}
+        />
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Start writing your note..."
+          value={content}
+          onChangeText={setContent}
+          multiline
+          textAlignVertical="top"
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  header: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingVertical: 50,
+   
+    // borderBottomWidth: 1,
+    // borderBottomColor: "#ddd",
+    backgroundColor: "#fff",
+  },
+  headerTitle: { fontSize: 20, fontWeight: "bold", marginLeft: 10 },
+  container: { padding: 20 },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
     padding: 15,
-    marginVertical: 10,
+    marginBottom: 15,
   },
-  error: { color: "red", marginBottom: 10 },
-  button: {
-    backgroundColor: "#7a42f4",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
+  textArea: { height: 200, textAlignVertical: "top" },
 });

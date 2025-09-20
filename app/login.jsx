@@ -28,7 +28,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/home");
+      router.push("/notes/home"); // updated route
     } catch (err) {
       setError(err.message);
     }
@@ -109,35 +109,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 20 },
   title: { fontSize: 28, fontWeight: "bold", marginTop: 50 },
   subtitle: { fontSize: 16, color: "#555", marginBottom: 20 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 10,
-  },
+  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 10, padding: 15, marginVertical: 10 },
   forgotPassword: { alignSelf: "flex-end", marginVertical: 5 },
   forgotText: { color: "#7a42f4", fontSize: 14 },
   error: { color: "red", marginBottom: 10 },
-  mainButton: {
-    backgroundColor: "#000",
-    padding: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    marginTop: 10,
-  },
+  mainButton: { backgroundColor: "#000", padding: 15, borderRadius: 30, alignItems: "center", marginTop: 10 },
   mainButtonText: { color: "white", fontWeight: "bold", fontSize: 16 },
   orText: { textAlign: "center", marginVertical: 15, color: "#555" },
-  socialButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 30,
-    padding: 12,
-    marginVertical: 5,
-  },
+  socialButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#ccc", borderRadius: 30, padding: 12, marginVertical: 5 },
   socialIcon: { width: 20, height: 20, marginRight: 10 },
   socialText: { fontSize: 15, fontWeight: "500" },
   footerText: { textAlign: "center", marginTop: 20, color: "#555" },

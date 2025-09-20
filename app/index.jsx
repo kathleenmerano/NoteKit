@@ -6,20 +6,19 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      {/* Illustration (replace with your own image) */}
+      {/* Illustration */}
       <Image
-        source={require("../assets/images/note.png")} // add your image in assets folder
+        source={require("../assets/images/note.png")}
         style={styles.image}
         resizeMode="contain"
       />
 
-      {/* Headline with highlight */}
+      {/* Headline */}
       <Text style={styles.headline}>
         <Text style={styles.highlight}>Your Creative </Text>
         Notebook
       </Text>
 
-      {/* Subtitle */}
       <Text style={styles.subtitle}>Write freely. Think clearly.</Text>
 
       {/* Buttons */}
@@ -50,58 +49,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
   },
-  image: {
-    width: "100%",
-    height: 300,
-    marginBottom: 30,
-  },
-  headline: {
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 10,
-    lineHeight: 34,
-  },
-  highlight: {
-    backgroundColor: "#FFD93D", // yellow highlight
-    color: "#1A1A1A",
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#444",
-    textAlign: "center",
-    marginBottom: 40,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    gap: 12,
-  },
-  outlineButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#000",
-    borderRadius: 20,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  outlineText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-  },
-  solidButton: {
-    flex: 1,
-    backgroundColor: "#000",
-    borderRadius: 20,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  solidText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#fff",
-  },
-});
+  image: { width: "100%", height: 300, marginBottom: 30 },
+  headline: { fontSize: 28, fontWeight: "700", textAlign: "center", marginBottom: 10 },
+  highlight: { backgroundColor: "#FFD93D", color: "#1A1A1A" },
+  subtitle: { fontSize: 18, fontWeight: "500", color: "#444", textAlign: "center", marginBottom: 40 },
+  buttonContainer: { flexDirection: "row", justifyContent: "space-between", width: "100%", gap: 12 },
+  outlineButton: { flex: 1, borderWidth: 1, borderColor: "#000", borderRadius: 20, paddingVertical: 14, alignItems: "center" },
+  outlineText: { fontSize: 16, fontWeight: "600", color: "#000" },
+  solidButton: { flex: 1, backgroundColor: "#000", borderRadius: 20, paddingVertical: 14, alignItems: "center" },
+  solidText: { fontSize: 16, fontWeight: "600", color: "#fff" },
+}); 

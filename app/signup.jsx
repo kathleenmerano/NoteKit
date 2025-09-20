@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
@@ -33,7 +26,7 @@ export default function Signup() {
   const handleSignup = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/home");
+      router.push("/notes/home"); // updated route
     } catch (err) {
       setError(err.message);
     }
@@ -41,7 +34,7 @@ export default function Signup() {
 
   // Google login result
   if (response?.type === "success") {
-    router.push("/home");
+    router.push("/notes/home");
   }
 
   return (
@@ -49,30 +42,13 @@ export default function Signup() {
       <Text style={styles.title}>Create Account</Text>
 
       {/* Name Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
-      />
+      <TextInput style={styles.input} placeholder="Full Name" value={name} onChangeText={setName} />
 
       {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+      <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
 
       {/* Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -84,11 +60,7 @@ export default function Signup() {
       <Text style={styles.orText}>or</Text>
 
       {/* Google Signup */}
-      <TouchableOpacity
-        style={styles.socialButton}
-        disabled={!request}
-        onPress={() => promptAsync()}
-      >
+      <TouchableOpacity style={styles.socialButton} disabled={!request} onPress={() => promptAsync()}>
         <Image source={require("../assets/images/google.png")} style={styles.socialIcon} />
         <Text style={styles.socialText}>Continue With Google</Text>
       </TouchableOpacity>
@@ -113,34 +85,12 @@ export default function Signup() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 20 },
   title: { fontSize: 28, fontWeight: "bold", marginTop: 50, marginBottom: 20 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 10,
-  },
+  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 12, padding: 15, marginBottom: 10 },
   error: { color: "red", marginBottom: 10 },
-  button: {
-    backgroundColor: "black",
-    padding: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    marginBottom: 15,
-  },
+  button: { backgroundColor: "black", padding: 15, borderRadius: 30, alignItems: "center", marginBottom: 15 },
   buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
   orText: { textAlign: "center", marginVertical: 10, color: "#999" },
-  socialButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 15,
-    borderRadius: 30,
-    justifyContent: "center",
-    marginBottom: 15,
-  },
+  socialButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#fff", borderWidth: 1, borderColor: "#ccc", padding: 15, borderRadius: 30, justifyContent: "center", marginBottom: 15 },
   socialIcon: { width: 20, height: 20, marginRight: 10 },
   socialText: { fontSize: 15, fontWeight: "500" },
   loginText: { textAlign: "center", marginTop: 20, color: "#555" },
