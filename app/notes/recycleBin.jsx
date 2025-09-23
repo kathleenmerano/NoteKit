@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { auth, db } from "../../firebaseConfig";
 import { collection, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
@@ -44,29 +45,57 @@ export default function RecycleBin() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+
       {/* Header */}
       <View style={styles.headerBar}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Recycle Bin</Text>
+
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Recycle Bin</Text>
+          <Text style={styles.headerSubtitle}>
+            {notes.length} {notes.length === 1 ? "note" : "notes"} deleted
+          </Text>
+        </View>
+
+        {/* Invisible spacer to balance the layout */}
+        <View style={styles.headerSpacer} />
       </View>
 
       {/* Notes */}
-      <ScrollView contentContainerStyle={styles.grid}>
+      <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
         {notes?.length > 0 ? (
           notes.map((item, index) => (
-            <View key={item.id} style={[styles.card, { backgroundColor: colors[index % colors.length] }]}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text numberOfLines={4} style={styles.cardContent}>{item.content}</Text>
+            <View
+              key={item.id}
+              style={[styles.card, { backgroundColor: colors[index % colors.length] }]}
+            >
+              <View style={styles.cardContent}>
+                <Text numberOfLines={1} style={styles.cardTitle}>
+                  {item.title || "Untitled"}
+                </Text>
+                <Text numberOfLines={3} style={styles.cardText}>
+                  {item.content}
+                </Text>
+              </View>
 
               <View style={styles.actions}>
-                <TouchableOpacity onPress={() => restoreNote(item.id)}>
-                  <Ionicons name="arrow-undo-outline" size={22} color="#000" />
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.restoreButton]}
+                  onPress={() => restoreNote(item.id)}
+                >
+                  <Ionicons name="arrow-undo-outline" size={18} color="#007AFF" />
+                  <Text style={styles.actionText}>Restore</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => deletePermanently(item.id)}>
-                  <Ionicons name="trash-outline" size={22} color="red" />
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={() => deletePermanently(item.id)}
+                >
+                  <Ionicons name="trash-outline" size={18} color="#ff3b30" />
+                  <Text style={[styles.actionText, { color: "#ff3b30" }]}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -75,18 +104,128 @@ export default function RecycleBin() {
           <Text style={styles.emptyText}>No deleted notes.</Text>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  headerBar: { flexDirection: "row", alignItems: "center", paddingVertical: 30 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", marginLeft: 10, flex: 1 },
-  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", paddingBottom: 100 },
-  card: { width: "48%", padding: 15, borderRadius: 12, marginBottom: 12, minHeight: 120, shadowColor: "#4b4646", shadowOpacity: 0.1, shadowRadius: 6, elevation: 3, position: "relative" },
-  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
-  cardContent: { fontSize: 13, color: "#444" },
-  actions: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 },
-  emptyText: { textAlign: "center", marginTop: 50, fontSize: 16, color: "#888" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#ffffff" 
+  },
+
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#e0e0e0",
+    backgroundColor: "#ffffff",
+    justifyContent: "space-between",
+  },
+  backButton: { 
+    padding: 8, 
+    marginLeft: -8,
+    width: 48, // Fixed width for centering
+  },
+  headerCenter: { 
+    flex: 1, 
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTitle: { 
+    fontSize: 18, 
+    fontWeight: "600", 
+    color: "#000" 
+  },
+  headerSubtitle: { 
+    fontSize: 12, 
+    color: "#666", 
+    marginTop: 2 
+  },
+  headerSpacer: {
+    width: 48, // Same width as back button for perfect centering
+  },
+
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    padding: 12,
+    paddingBottom: 100,
+  },
+  card: {
+    width: "48%",
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 12,
+    minHeight: 160,
+    maxHeight: 200,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
+    justifyContent: "space-between",
+  },
+  
+  cardContent: {
+    flex: 1,
+    marginBottom: 8,
+  },
+  cardTitle: { 
+    fontSize: 15, 
+    fontWeight: "600", 
+    color: "#000", 
+    marginBottom: 6,
+    flexWrap: "wrap",
+  },
+  cardText: { 
+    fontSize: 12, 
+    color: "#333", 
+    lineHeight: 16,
+    flexShrink: 1,
+    flexWrap: "wrap",
+    // Force text wrapping for long strings
+    wordWrap: "break-word",
+  },
+
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 8,
+    gap: 6,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    flex: 1,
+    justifyContent: "center",
+  },
+  restoreButton: { 
+    backgroundColor: "#f0f8ff",
+    marginRight: 3,
+  },
+  deleteButton: { 
+    backgroundColor: "#fff5f5",
+    marginLeft: 3,
+  },
+  actionText: { 
+    fontSize: 11, 
+    marginLeft: 4, 
+    color: "#333",
+    fontWeight: "500",
+  },
+
+  emptyText: { 
+    textAlign: "center", 
+    marginTop: 50, 
+    fontSize: 16, 
+    color: "#888",
+    width: "100%",
+  },
 });

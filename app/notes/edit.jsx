@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
@@ -42,6 +43,7 @@ export default function EditNote() {
         content,
         updatedAt: serverTimestamp(),
       });
+      setNote(prev => ({ ...prev, updatedAt: new Date() }));
       Alert.alert("Success", "Note updated!");
       router.push("/notes/home");
     } catch (err) {
@@ -49,16 +51,15 @@ export default function EditNote() {
     }
   };
 
-  // Soft-delete: move to Recycle Bin
   const handleDelete = async () => {
     try {
       const docRef = doc(db, "notes", id);
       await updateDoc(docRef, {
-        deleted: true, // Mark as deleted
+        deleted: true,
         updatedAt: serverTimestamp(),
       });
       Alert.alert("Deleted", "Note moved to Recycle Bin!");
-      router.replace("/notes/home"); // Use replace to force Home to reload listener immediately
+      router.replace("/notes/home");
     } catch (err) {
       Alert.alert("Error", err.message);
     }
@@ -67,52 +68,182 @@ export default function EditNote() {
   if (!note) {
     return (
       <View style={styles.container}>
-        <Text>Loading note...</Text>
+        <Text style={styles.loadingText}>Loading note...</Text>
       </View>
     );
   }
 
+  const formatDate = (ts) => {
+    if (!ts) return "";
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Top Header Bar */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+
+      {/* Header */}
+      <SafeAreaView edges={["top"]} style={styles.headerBar}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notes</Text>
+
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Edit Note</Text>
+          {note?.updatedAt && (
+            <Text style={styles.headerDate}>
+              Last edited {formatDate(note.updatedAt)}
+            </Text>
+          )}
+        </View>
+
         <View style={styles.headerActions}>
-          <TouchableOpacity onPress={handleUpdate} style={{ marginRight: 15 }}>
-            <Ionicons name="checkmark-done" size={24} color="green" />
+          <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
+            <Ionicons name="checkmark-done-outline" size={24} color="#007AFF" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleDelete}>
-            <Ionicons name="trash" size={24} color="red" />
+          <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+            <Ionicons name="trash-outline" size={24} color="#c62828" />
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
 
-      {/* Inputs */}
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-        multiline
-      />
-    </View>
+      {/* Content */}
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={false}
+      >
+        <TextInput
+          style={styles.titleInput}
+          value={title}
+          onChangeText={setTitle}
+          placeholder="Note title..."
+          placeholderTextColor="#999"
+          multiline={true}
+          returnKeyType="next"
+          blurOnSubmit={false}
+        />
+
+        <TextInput
+          style={styles.contentInput}
+          value={content}
+          onChangeText={setContent}
+          placeholder="Edit your note..."
+          placeholderTextColor="#999"
+          multiline={true}
+          textAlignVertical="top"
+          scrollEnabled={false}
+          returnKeyType="default"
+          blurOnSubmit={false}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  headerBar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 30 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", marginLeft: 10, flex: 1 },
-  headerActions: { flexDirection: "row", alignItems: "center" },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 10, padding: 15, marginBottom: 15 },
-  textArea: { height: 150, textAlignVertical: "top" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#ffffff" 
+  },
+  loadingText: { 
+    textAlign: "center", 
+    fontSize: 16, 
+    color: "#666", 
+    marginTop: 40 
+  },
+
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#ffffff",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#e0e0e0",
+    minHeight: 60,
+  },
+  backButton: { 
+    padding: 8, 
+    marginLeft: -8,
+    width: 80, // Fixed width for proper centering
+  },
+  headerCenter: { 
+    flex: 1, 
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  headerTitle: { 
+    fontSize: 18, 
+    fontWeight: "600", 
+    color: "#000" 
+  },
+  headerDate: { 
+    fontSize: 11, 
+    color: "#666", 
+    marginTop: 2,
+    textAlign: "center",
+  },
+  headerActions: { 
+    flexDirection: "row", 
+    alignItems: "center",
+    width: 80, // Same width as back button for balance
+    justifyContent: "flex-end",
+  },
+  saveButton: { 
+    padding: 8, 
+    marginRight: 4, 
+    backgroundColor: "#f0f8ff", 
+    borderRadius: 8 
+  },
+  deleteButton: { 
+    padding: 8, 
+    marginLeft: 4, 
+    borderRadius: 8 
+  },
+
+  content: { 
+    flex: 1 
+  },
+  scrollContent: { 
+    flexGrow: 1, 
+    padding: 16,
+    paddingBottom: 40,
+  },
+  titleInput: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    lineHeight: 28,
+    textAlignVertical: "top",
+    maxHeight: 120,
+  },
+  contentInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#333",
+    lineHeight: 22,
+    minHeight: 250,
+    maxHeight: 500,
+    textAlignVertical: "top",
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+  },
 });

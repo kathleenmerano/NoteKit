@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Animated, Easing } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Animated, Easing, StatusBar } from "react-native";
 import { useRouter } from "expo-router";
 import { auth, db } from "../../firebaseConfig";
 import { collection, query, where, onSnapshot, orderBy, doc, updateDoc } from "firebase/firestore";
@@ -13,7 +13,7 @@ export default function NotesHome() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const dropdownAnim = useRef(new Animated.Value(0)).current;
-  const colors = ["#fef9c3", "#bae6fd", "#bbf7d0", "#fecdd3", "#e9d5ff", "#fcd34d"];
+  const colors = ["#fef3c7", "#dbeafe", "#d1fae5", "#fce7f3", "#e0e7ff", "#fed7aa"];
 
   useEffect(() => {
     const q = query(
@@ -29,7 +29,7 @@ export default function NotesHome() {
           id: doc.id,
           ...data,
           pinned: data.pinned ?? false,
-          deleted: data.deleted ?? false, // Ensure field exists
+          deleted: data.deleted ?? false,
         };
       });
       setNotes(allNotes);
@@ -51,7 +51,7 @@ export default function NotesHome() {
       Animated.timing(dropdownAnim, {
         toValue: 0,
         duration: 200,
-        useNativeDriver: true, // smoother
+        useNativeDriver: true,
         easing: Easing.out(Easing.quad),
       }).start(() => setDropdownOpen(false));
     } else {
@@ -72,13 +72,12 @@ export default function NotesHome() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      router.replace("/login"); // navigate to login
+      router.replace("/login");
     } catch (err) {
       console.log("Logout error:", err.message);
     }
   };
 
-  // Filter notes
   const filteredNotes = notes
     ?.filter(n => !n.deleted)
     .filter(n => (filter === "pinned" ? n.pinned : true))
@@ -101,64 +100,115 @@ export default function NotesHome() {
     ],
   };
 
+  const formatDate = (timestamp) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric'
+    });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleBackgroundPress}>
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+        
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>My Notes</Text>
-          <TouchableOpacity onPress={toggleDropdown}>
-            <Ionicons name="menu" size={28} color="#000" />
+          <View>
+            <Text style={styles.headerTitle}>My Notes</Text>
+            <Text style={styles.headerSubtitle}>
+              {sortedNotes.length} {sortedNotes.length === 1 ? 'note' : 'notes'}
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.menuButton} onPress={toggleDropdown}>
+            <Ionicons name="menu" size={28} color="#333" />
           </TouchableOpacity>
         </View>
 
         {/* Dropdown */}
         {dropdownOpen && (
           <Animated.View style={[styles.dropdown, dropdownStyle]}>
-            <TouchableOpacity onPress={() => router.push("/notes/recycleBin")}>
+            <TouchableOpacity style={styles.dropdownItemContainer} onPress={() => router.push("/notes/recycleBin")}>
               <Text style={styles.dropdownItem}>Recently Deleted</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogout}>
-              <Text style={styles.dropdownItem}>Log Out</Text>
+            <View style={styles.dropdownDivider} />
+            <TouchableOpacity style={styles.dropdownItemContainer} onPress={handleLogout}>
+              <Text style={[styles.dropdownItem, styles.logoutText]}>Log Out</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
 
         {/* Search */}
-        <TextInput
-          style={styles.search}
-          placeholder="Search notes..."
-          value={search}
-          onChangeText={setSearch}
-        />
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search notes..."
+            value={search}
+            onChangeText={setSearch}
+            placeholderTextColor="#999"
+          />
+        </View>
 
         {/* Filter */}
         <View style={styles.filterBar}>
-          <TouchableOpacity onPress={() => setFilter("all")} style={[styles.filterBtn, filter === "all" && styles.activeFilter]}>
-            <Text>All</Text>
+          <TouchableOpacity 
+            onPress={() => setFilter("all")} 
+            style={[styles.filterBtn, filter === "all" && styles.activeFilter]}
+          >
+            <Text style={[styles.filterText, filter === "all" && styles.activeFilterText]}>All</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setFilter("pinned")} style={[styles.filterBtn, filter === "pinned" && styles.activeFilter]}>
-            <Text>Pinned</Text>
+          <TouchableOpacity 
+            onPress={() => setFilter("pinned")} 
+            style={[styles.filterBtn, filter === "pinned" && styles.activeFilter]}
+          >
+            <Text style={[styles.filterText, filter === "pinned" && styles.activeFilterText]}>Pinned</Text>
           </TouchableOpacity>
         </View>
 
         {/* Notes Grid */}
-        <ScrollView contentContainerStyle={styles.grid}>
+        <ScrollView 
+          contentContainerStyle={[styles.gridContainer, { paddingBottom: 100 }]}
+          showsVerticalScrollIndicator={false}
+        >
           {sortedNotes?.length > 0 ? (
             sortedNotes.map((item, index) => (
               <TouchableOpacity
                 key={item.id}
-                style={[styles.card, { backgroundColor: colors[index % colors.length] }]}
+                style={[styles.noteCard, { backgroundColor: colors[index % colors.length] }]}
                 onPress={() => router.push(`/notes/edit?id=${item.id}`)}
                 onLongPress={() => togglePin(item.id, item.pinned)}
               >
-                {item.pinned && <View style={styles.pinIcon}><Ionicons name="pin" size={18} color="#333" /></View>}
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text numberOfLines={4} style={styles.cardContent}>{item.content}</Text>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle} numberOfLines={1}>
+                    {item.title || 'Untitled'}
+                  </Text>
+                  {item.pinned && (
+                    <View style={styles.pinIndicator}>
+                      <Ionicons name="pin" size={16} color="#666" />
+                    </View>
+                  )}
+                </View>
+                
+                <Text numberOfLines={4} style={styles.cardContent}>
+                  {item.content}
+                </Text>
+                
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardDate}>
+                    {formatDate(item.updatedAt)}
+                  </Text>
+                </View>
               </TouchableOpacity>
             ))
           ) : (
-            <Text style={styles.emptyText}>No notes found.</Text>
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyTitle}>No notes found</Text>
+              <Text style={styles.emptySubtitle}>
+                {filter === "pinned" ? "No pinned notes yet" : "Create your first note to get started"}
+              </Text>
+            </View>
           )}
         </ScrollView>
 
@@ -172,19 +222,187 @@ export default function NotesHome() {
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 20, paddingTop: 50, paddingBottom: 20 },
-  headerTitle: { fontSize: 30, fontWeight: "bold" },
-  dropdown: { position: "absolute", right: 15, top: 55, backgroundColor: "#fff", borderWidth: 1, borderColor: "#ccc", borderRadius: 12, zIndex: 10, paddingVertical: 12, paddingHorizontal: 18 },
-  dropdownItem: { paddingVertical: 12, fontSize: 16 },
-  search: { margin: 15, padding: 10, borderWidth: 1, borderColor: "#ccc", borderRadius: 10 },
-  filterBar: { flexDirection: "row", marginHorizontal: 15, marginBottom: 10 },
-  filterBtn: { paddingVertical: 6, paddingHorizontal: 15, borderRadius: 12, borderWidth: 1, borderColor: "#ccc", marginRight: 10 },
-  activeFilter: { backgroundColor: "#ccc4daff", borderColor: "#838187ff", color: "#e7d9d9ff" },
-  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", paddingHorizontal: 10, paddingBottom: 100 },
-  card: { width: "48%", padding: 15, borderRadius: 12, marginBottom: 12, minHeight: 120, shadowColor: "#4b4646ff", shadowOpacity: 0.1, shadowRadius: 6, elevation: 3, position: "relative" },
-  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
-  cardContent: { fontSize: 13, color: "#444" },
-  pinIcon: { position: "absolute", top: 8, right: 8 },
-  emptyText: { textAlign: "center", marginTop: 50, fontSize: 16, color: "#888" },
-  addButton: { position: "absolute", right: 20, bottom: 30, backgroundColor: "#030205ff", width: 60, height: 60, borderRadius: 30, justifyContent: "center", alignItems: "center", elevation: 5 },
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 20,
+    backgroundColor: "#ffffff",
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#000",
+    letterSpacing: -0.5,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 2,
+  },
+  menuButton: {
+    padding: 8,
+  },
+  dropdown: {
+    position: "absolute",
+    right: 20,
+    top: 90,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    zIndex: 1000,
+    minWidth: 180,
+    overflow: "hidden",
+  },
+  dropdownItemContainer: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  dropdownItem: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500",
+  },
+  dropdownDivider: {
+    height: 1,
+    backgroundColor: "#f0f0f0",
+    marginHorizontal: 20,
+  },
+  logoutText: {
+    color: "#ff3b30",
+  },
+  searchContainer: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  searchInput: {
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: "#333",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  filterBar: {
+    flexDirection: "row",
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  filterBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: "#f8f9fa",
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  activeFilter: {
+    backgroundColor: "#007AFF",
+    borderColor: "#007AFF",
+  },
+  filterText: {
+    fontSize: 14,
+    color: "#666",
+    fontWeight: "600",
+  },
+  activeFilterText: {
+    color: "#fff",
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  noteCard: {
+    width: "48%",
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 16,
+    minHeight: 160,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 8,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000",
+    flex: 1,
+  },
+  pinIndicator: {
+    marginLeft: 8,
+    opacity: 0.8,
+  },
+  cardContent: {
+    fontSize: 14,
+    color: "#555",
+    lineHeight: 20,
+    flex: 1,
+  },
+  cardFooter: {
+    marginTop: 12,
+    paddingTop: 8,
+  },
+  cardDate: {
+    fontSize: 12,
+    color: "#888",
+    fontWeight: "500",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 60,
+    width: "100%",
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    lineHeight: 22,
+  },
+  addButton: {
+    position: "absolute",
+    right: 24,
+    bottom: 40,
+    backgroundColor: "#007AFF",
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#007AFF",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
 });
