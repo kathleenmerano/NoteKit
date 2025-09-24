@@ -13,16 +13,22 @@ export default function RootLayout() {
         <Stack.Screen 
           name="login" 
           options={{ 
-            title: "Log In", 
-            headerBackTitleVisible: false 
+            title: "", 
+            headerBackTitleVisible: false,
+            headerStyle: { backgroundColor: "#fdfcf7" }, // match your login background
+            headerTintColor: "#000", // back arrow color
+            headerTitleStyle: { fontWeight: "600", fontSize: 18 },
           }} 
         />
         <Stack.Screen 
-          name="signup" 
-          options={{ 
-            title: "Sign Up", 
-            headerBackTitleVisible: false 
-          }} 
+            name="signup" 
+            options={{ 
+              title: "", 
+              headerBackTitleVisible: false,
+              headerStyle: { backgroundColor: "#fdfcf7" }, // match your signup background
+              headerTintColor: "#000", // back arrow color
+              headerTitleStyle: { fontWeight: "600", fontSize: 18 },
+            }} 
         />
 
         {/* Home: hide header */}

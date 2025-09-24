@@ -224,7 +224,7 @@ export default function NotesHome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fdfcf7", // updated
   },
   header: {
     flexDirection: "row",
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
     paddingBottom: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fdfcf7", // updated
   },
   headerTitle: {
     fontSize: 32,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   searchInput: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#fff", // softer search box
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -304,14 +304,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#fff", // updated
     marginRight: 12,
     borderWidth: 1,
     borderColor: "#e9ecef",
   },
   activeFilter: {
-    backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
+    backgroundColor: "#845d6dff", // updated
+    borderColor: "#845d6dff", // updated
   },
   filterText: {
     fontSize: 14,
@@ -393,13 +393,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 24,
     bottom: 40,
-    backgroundColor: "#007AFF",
+    backgroundColor: "#845d6dff", // updated
     width: 64,
     height: 64,
     borderRadius: 32,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#007AFF",
+    shadowColor: "#845d6dff", // updated
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,

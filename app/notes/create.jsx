@@ -1,4 +1,4 @@
-// Fixed CreateNote Component
+// Fixed CreateNote Component with theme colors
 import { useState } from "react";
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, KeyboardAvoidingView, Platform, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -51,12 +51,12 @@ export default function CreateNote() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <StatusBar barStyle="dark-content" backgroundColor="#fdfcf7" />
 
       {/* Header */}
       <SafeAreaView edges={["top"]} style={styles.headerBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          <Ionicons name="arrow-back" size={24} color="#845d6d" />
         </TouchableOpacity>
         
         <View style={styles.headerCenter}>
@@ -72,7 +72,7 @@ export default function CreateNote() {
           <Ionicons 
             name={isSaving ? "hourglass-outline" : "checkmark-done-outline"} 
             size={24} 
-            color={canSave ? "#007AFF" : "#ccc"} 
+            color={canSave ? "#845d6d" : "#ccc"} 
           />
         </TouchableOpacity>
       </SafeAreaView>
@@ -126,7 +126,7 @@ export default function CreateNote() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: "#ffffff" 
+    backgroundColor: "#fdfcf7" 
   },
 
   headerBar: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fdfcf7",
     borderBottomWidth: 0.5,
     borderBottomColor: "#e0e0e0",
     minHeight: 60,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginRight: -8 
   },
   saveButtonActive: { 
-    backgroundColor: "#f0f8ff", 
+    backgroundColor: "#f2e6eb", 
     borderRadius: 8 
   },
 
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     lineHeight: 28,
     textAlignVertical: "top",
-    maxHeight: 120, // Prevent title from taking too much space
+    maxHeight: 120, 
   },
   contentInput: {
     flex: 1,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     color: "#333",
     lineHeight: 22,
     minHeight: 250,
-    maxHeight: 400, // Adjusted for status bar
+    maxHeight: 400, 
     textAlignVertical: "top",
     paddingHorizontal: 4,
     paddingVertical: 8,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f2f2f2",
     borderTopWidth: 0.5,
     borderTopColor: "#e0e0e0",
   },

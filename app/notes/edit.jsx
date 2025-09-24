@@ -90,12 +90,12 @@ export default function EditNote() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <StatusBar barStyle="dark-content" backgroundColor="#fdfcf7" />
 
       {/* Header */}
       <SafeAreaView edges={["top"]} style={styles.headerBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          <Ionicons name="arrow-back" size={24} color="#845d6d" />
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
@@ -109,10 +109,10 @@ export default function EditNote() {
 
         <View style={styles.headerActions}>
           <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
-            <Ionicons name="checkmark-done-outline" size={24} color="#007AFF" />
+            <Ionicons name="checkmark-done-outline" size={24} color="#845d6d" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-            <Ionicons name="trash-outline" size={24} color="#c62828" />
+            <Ionicons name="trash-outline" size={24} color="#845d6d" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -130,7 +130,7 @@ export default function EditNote() {
           value={title}
           onChangeText={setTitle}
           placeholder="Note title..."
-          placeholderTextColor="#999"
+          placeholderTextColor="#a48a95"
           multiline={true}
           returnKeyType="next"
           blurOnSubmit={false}
@@ -141,7 +141,7 @@ export default function EditNote() {
           value={content}
           onChangeText={setContent}
           placeholder="Edit your note..."
-          placeholderTextColor="#999"
+          placeholderTextColor="#a48a95"
           multiline={true}
           textAlignVertical="top"
           scrollEnabled={false}
@@ -156,12 +156,12 @@ export default function EditNote() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: "#ffffff" 
+    backgroundColor: "#fdfcf7" 
   },
   loadingText: { 
     textAlign: "center", 
     fontSize: 16, 
-    color: "#666", 
+    color: "#845d6d", 
     marginTop: 40 
   },
 
@@ -171,15 +171,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fdfcf7",
     borderBottomWidth: 0.5,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: "#d3c3c9",
     minHeight: 60,
   },
   backButton: { 
     padding: 8, 
     marginLeft: -8,
-    width: 80, // Fixed width for proper centering
+    width: 80,
   },
   headerCenter: { 
     flex: 1, 
@@ -190,24 +190,24 @@ const styles = StyleSheet.create({
   headerTitle: { 
     fontSize: 18, 
     fontWeight: "600", 
-    color: "#000" 
+    color: "#3b2931ff" 
   },
   headerDate: { 
     fontSize: 11, 
-    color: "#666", 
+    color: "#a48a95", 
     marginTop: 2,
     textAlign: "center",
   },
   headerActions: { 
     flexDirection: "row", 
     alignItems: "center",
-    width: 80, // Same width as back button for balance
+    width: 80,
     justifyContent: "flex-end",
   },
   saveButton: { 
     padding: 8, 
     marginRight: 4, 
-    backgroundColor: "#f0f8ff", 
+    backgroundColor: "#f5ecf0", 
     borderRadius: 8 
   },
   deleteButton: { 
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   titleInput: {
     fontSize: 22,
     fontWeight: "600",
-    color: "#000",
+    color: "#845d6d",
     marginBottom: 16,
     paddingVertical: 8,
     paddingHorizontal: 4,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   contentInput: {
     flex: 1,
     fontSize: 16,
-    color: "#333",
+    color: "#4a3b41",
     lineHeight: 22,
     minHeight: 250,
     maxHeight: 500,

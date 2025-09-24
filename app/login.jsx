@@ -46,13 +46,14 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign in</Text>
-      <Text style={styles.subtitle}>Welcome back</Text>
+      <Text style={styles.title}>Welcome Back 👋</Text>
+      <Text style={styles.subtitle}>Sign in to continue with NoteKit</Text>
 
       {/* Email */}
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor="#999"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -62,6 +63,7 @@ export default function Login() {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#999"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -80,7 +82,7 @@ export default function Login() {
         <Text style={styles.mainButtonText}>Sign in</Text>
       </TouchableOpacity>
 
-      <Text style={styles.orText}>or</Text>
+      <Text style={styles.orText}>────────  or  ────────</Text>
 
       {/* Google */}
       <TouchableOpacity style={styles.socialButton} onPress={() => promptAsync()}>
@@ -106,19 +108,56 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  title: { fontSize: 28, fontWeight: "bold", marginTop: 50 },
-  subtitle: { fontSize: 16, color: "#555", marginBottom: 20 },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 10, padding: 15, marginVertical: 10 },
-  forgotPassword: { alignSelf: "flex-end", marginVertical: 5 },
-  forgotText: { color: "#7a42f4", fontSize: 14 },
+  container: { flex: 1, backgroundColor: "#fdfcf7", padding: 25, justifyContent: "center" },
+
+  title: { fontSize: 28, fontWeight: "700", color: "#1A1A1A", marginBottom: 8 },
+  subtitle: { fontSize: 16, color: "#666", marginBottom: 25 },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 15,
+    marginVertical: 8,
+    fontSize: 15,
+    color: "#333",
+  },
+
+  forgotPassword: { alignSelf: "flex-end", marginVertical: 6 },
+  forgotText: { color: "#845d6dff", fontSize: 14, fontWeight: "500" },
+
   error: { color: "red", marginBottom: 10 },
-  mainButton: { backgroundColor: "#000", padding: 15, borderRadius: 30, alignItems: "center", marginTop: 10 },
-  mainButtonText: { color: "white", fontWeight: "bold", fontSize: 16 },
-  orText: { textAlign: "center", marginVertical: 15, color: "#555" },
-  socialButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#ccc", borderRadius: 30, padding: 12, marginVertical: 5 },
+
+  mainButton: {
+    backgroundColor: "#845d6dff",
+    padding: 15,
+    borderRadius: 30,
+    alignItems: "center",
+    marginTop: 15,
+    shadowColor: "#845d6dff",
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  mainButtonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
+
+  orText: { textAlign: "center", marginVertical: 20, color: "#888", fontSize: 14 },
+
+  socialButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 25,
+    padding: 12,
+    marginVertical: 6,
+    backgroundColor: "#fff",
+  },
   socialIcon: { width: 20, height: 20, marginRight: 10 },
-  socialText: { fontSize: 15, fontWeight: "500" },
-  footerText: { textAlign: "center", marginTop: 20, color: "#555" },
-  link: { color: "#7a42f4", fontWeight: "600" },
+  socialText: { fontSize: 15, fontWeight: "500", color: "#333" },
+
+  footerText: { textAlign: "center", marginTop: 25, color: "#555", fontSize: 14 },
+  link: { color: "#845d6dff", fontWeight: "600" },
 });

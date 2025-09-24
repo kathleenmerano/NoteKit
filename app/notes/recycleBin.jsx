@@ -51,7 +51,7 @@ export default function RecycleBin() {
       {/* Header */}
       <View style={styles.headerBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          <Ionicons name="arrow-back" size={24} color="#845d6d" />
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
@@ -87,7 +87,7 @@ export default function RecycleBin() {
                   style={[styles.actionButton, styles.restoreButton]}
                   onPress={() => restoreNote(item.id)}
                 >
-                  <Ionicons name="arrow-undo-outline" size={18} color="#007AFF" />
+                  <Ionicons name="arrow-undo-outline" size={18} color="#845d6d" />
                   <Text style={styles.actionText}>Restore</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -111,7 +111,7 @@ export default function RecycleBin() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: "#ffffff" 
+    backgroundColor: "#fdfcf7" 
   },
 
   headerBar: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
     borderBottomColor: "#e0e0e0",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fdfcf7",
     justifyContent: "space-between",
   },
   backButton: { 
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: { 
     fontSize: 12, 
-    color: "#666", 
+    color: "#aa8f8fff", 
     marginTop: 2 
   },
   headerSpacer: {
